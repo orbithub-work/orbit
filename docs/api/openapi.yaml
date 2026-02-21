@@ -1,0 +1,715 @@
+openapi: 3.0.0
+info:
+  title: Media Assistant API
+  description: API for Media Assistant OS
+  version: 1.0.0
+servers:
+  - url: http://localhost:32000
+    description: Local Server
+
+tags:
+  - name: System
+    description: System and health information
+  - name: Import
+    description: Onboarding and initial import operations
+  - name: Assets
+    description: Asset management and file operations
+  - name: Projects
+    description: Project management
+  - name: Lineage
+    description: Asset relationship tracking
+  - name: Tasks
+    description: Background task management
+  - name: Artifacts
+    description: Generated artifacts management
+  - name: Plugins
+    description: Plugin registration and management
+  - name: Activity
+    description: System activity and event logs
+
+paths:
+  # System
+  /api/health:
+    get:
+      summary: Health check
+      tags: [System]
+      responses:
+        '200':
+          description: OK
+  /api/metrics:
+    get:
+      summary: Get system metrics
+      tags: [System]
+      responses:
+        '200':
+          description: OK
+  /api/system/info:
+    get:
+      summary: Get system info
+      tags: [System]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemInfo'
+  /api/system/first-launch:
+    get:
+      summary: Check if it's the first launch
+      tags: [System]
+      responses:
+        '200':
+          description: OK
+  /api/system/first-launch/complete:
+    post:
+      summary: Mark first launch as complete
+      tags: [System]
+      responses:
+        '200':
+          description: OK
+
+  # Import & Onboarding
+  /api/system/initial-import:
+    post:
+      summary: Start initial import scan
+      tags: [Import]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                directories:
+                  type: array
+                  items:
+                    type: string
+                quickScanLimit:
+                  type: integer
+      responses:
+        '200':
+          description: Scan started
+  /api/system/import-progress:
+    get:
+      summary: Get import progress
+      tags: [Import]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportProgress'
+  /api/get_common_directories:
+    get:
+      summary: Get common system directories
+      tags: [Import]
+      responses:
+        '200':
+          description: OK
+  /api/run_onboarding:
+    post:
+      summary: Run full onboarding process
+      tags: [Import]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                workspace_path:
+                  type: string
+                index_dirs:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Onboarding started
+
+  # Assets
+  /api/import:
+    post:
+      summary: Import local paths into the system
+      tags: [Assets]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                paths:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: OK
+  /api/assets/get:
+    get:
+      summary: Get detailed asset information
+      tags: [Assets]
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Asset'
+  /api/assets:
+    get:
+      summary: List assets with unified filters and pagination
+      tags: [Assets]
+      parameters:
+        - in: query
+          name: projectId
+          schema:
+            type: string
+        - in: query
+          name: directory
+          schema:
+            type: string
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: tagIds
+          schema:
+            type: string
+          description: Comma-separated tag ids
+        - in: query
+          name: types
+          schema:
+            type: string
+          description: Comma-separated file extensions
+        - in: query
+          name: shapes
+          schema:
+            type: string
+          description: Comma-separated shapes (landscape, portrait, square, panorama, unknown)
+        - in: query
+          name: rating
+          schema:
+            type: integer
+          description: Exact effective rating (user_rating first, fallback suggested_rating)
+        - in: query
+          name: ratingMin
+          schema:
+            type: integer
+        - in: query
+          name: ratingMax
+          schema:
+            type: integer
+        - in: query
+          name: cursor
+          schema:
+            type: string
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+        - in: query
+          name: sortOrder
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /api/assets/update:
+    post:
+      summary: Update asset metadata
+      tags: [Assets]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                media_meta:
+                  type: string
+                user_rating:
+                  type: integer
+                  description: 1-5 stars set by user
+                clear_user_rating:
+                  type: boolean
+                  description: Clear existing user rating (set null)
+      responses:
+        '200':
+          description: Updated
+  /api/assets/archive:
+    post:
+      summary: Archive assets
+      tags: [Assets]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                project_id:
+                  type: string
+                paths:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Archived
+  /api/assets/index:
+    post:
+      summary: Manually index a file
+      tags: [Assets]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                path:
+                  type: string
+                project_id:
+                  type: string
+      responses:
+        '200':
+          description: Indexed
+  /api/assets/delete:
+    post:
+      summary: Delete an asset
+      tags: [Assets]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+      responses:
+        '200':
+          description: Deleted
+  /api/open_file:
+    post:
+      summary: Open file in default application
+      tags: [Assets]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                path:
+                  type: string
+                id:
+                  type: string
+      responses:
+        '200':
+          description: OK
+  /api/open_in_folder:
+    post:
+      summary: Open file in containing folder
+      tags: [Assets]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                path:
+                  type: string
+                id:
+                  type: string
+      responses:
+        '200':
+          description: OK
+
+  # Projects
+  /api/projects:
+    get:
+      summary: List all projects
+      tags: [Projects]
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Create a new project
+      tags: [Projects]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                project_type:
+                  type: string
+      responses:
+        '200':
+          description: Created
+
+  # Lineage
+  /api/lineage/list:
+    get:
+      summary: List lineage for an asset
+      tags: [Lineage]
+      parameters:
+        - in: query
+          name: assetId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /api/lineage/create:
+    post:
+      summary: Create asset lineage (relationship)
+      tags: [Lineage]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ancestor_id:
+                  type: string
+                descendant_id:
+                  type: string
+                relation_type:
+                  type: string
+      responses:
+        '200':
+          description: Created
+  /api/lineage/update:
+    post:
+      summary: Update existing lineage
+      tags: [Lineage]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                ancestor_id:
+                  type: string
+                descendant_id:
+                  type: string
+                relation_type:
+                  type: string
+      responses:
+        '200':
+          description: Updated
+  /api/lineage/delete:
+    post:
+      summary: Delete lineage
+      tags: [Lineage]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                ancestor_id:
+                  type: string
+                descendant_id:
+                  type: string
+                relation_type:
+                  type: string
+      responses:
+        '200':
+          description: Deleted
+
+  # Plugins
+  /api/plugins/register:
+    post:
+      summary: Register a new plugin
+      tags: [Plugins]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                plugin_id:
+                  type: string
+                name:
+                  type: string
+      responses:
+        '200':
+          description: Registered
+
+  # Tasks
+  /api/tasks/pending:
+    get:
+      summary: List pending background tasks
+      tags: [Tasks]
+      parameters:
+        - in: query
+          name: type
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+  /api/tasks/active:
+    get:
+      summary: Get currently active tasks
+      tags: [Tasks]
+      responses:
+        '200':
+          description: OK
+  /api/tasks/claim:
+    post:
+      summary: Claim a task for a worker
+      tags: [Tasks]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task_id:
+                  type: string
+                worker_id:
+                  type: string
+      responses:
+        '200':
+          description: Claimed
+  /api/tasks/report:
+    post:
+      summary: Report task progress or completion
+      tags: [Tasks]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task_id:
+                  type: string
+                success:
+                  type: boolean
+                error:
+                  type: string
+                result_data:
+                  type: object
+      responses:
+        '200':
+          description: Reported
+
+  # Artifacts
+  /api/artifacts/list:
+    get:
+      summary: List artifacts
+      tags: [Artifacts]
+      parameters:
+        - in: query
+          name: project_id
+          schema:
+            type: string
+        - in: query
+          name: kind
+          schema:
+            type: string
+        - in: query
+          name: limit
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+  /api/artifacts/get:
+    get:
+      summary: Get detailed artifact info
+      tags: [Artifacts]
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /api/artifacts/create:
+    post:
+      summary: Create a new artifact
+      tags: [Artifacts]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                project_id:
+                  type: string
+                kind:
+                  type: string
+                data:
+                  type: string
+      responses:
+        '200':
+          description: Created
+  /api/artifacts/update:
+    post:
+      summary: Update an artifact
+      tags: [Artifacts]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                data:
+                  type: string
+      responses:
+        '200':
+          description: Updated
+  /api/artifacts/delete:
+    post:
+      summary: Delete an artifact
+      tags: [Artifacts]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+      responses:
+        '200':
+          description: Deleted
+
+  # Activity
+  /api/activity/list:
+    get:
+      summary: List system activity logs
+      tags: [Activity]
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+  /api/events/replay:
+    get:
+      summary: Replay system events
+      tags: [Activity]
+      parameters:
+        - in: query
+          name: since_id
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+  /events:
+    get:
+      summary: WebSocket events stream
+      tags: [Activity]
+      description: Connect via WebSocket to receive real-time events
+      responses:
+        '101':
+          description: Switching Protocols to WebSocket
+
+components:
+  schemas:
+    SystemInfo:
+      type: object
+      properties:
+        os:
+          type: string
+        arch:
+          type: string
+        pid:
+          type: integer
+        port:
+          type: integer
+        startTime:
+          type: integer
+
+    ImportProgress:
+      type: object
+      properties:
+        processed:
+          type: integer
+        total:
+          type: integer
+        status:
+          type: string
+        complete:
+          type: boolean
+
+    Asset:
+      type: object
+      properties:
+        id:
+          type: string
+        path:
+          type: string
+        name:
+          type: string
+        size:
+          type: integer
+        mime_type:
+          type: string
+        status:
+          type: string
+          enum: [PENDING, READY, INDEXED, MISSING]
+        media_meta:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    FileEntry:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        path:
+          type: string
+        is_directory:
+          type: boolean
+        status:
+          type: string
+          enum: [PENDING, READY, INDEXED, MISSING]
+        asset_id:
+          type: string

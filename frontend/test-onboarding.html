@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Test Onboarding</title>
+  <style>
+    body { background: #1a1a1a; color: #fff; padding: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Testing Onboarding Page</h1>
+  <div id="status">Loading...</div>
+  <iframe src="http://localhost:5176/#/onboarding" width="600" height="550" style="border: 1px solid #333; margin-top: 20px;"></iframe>
+  
+  <script>
+    setTimeout(() => {
+      document.getElementById('status').textContent = 'If you see white screen in iframe, check browser console';
+    }, 2000);
+  </script>
+</body>
+</html>

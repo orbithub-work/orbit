@@ -1,0 +1,156 @@
+/* 智归档OS - 创作者专业版主题 (Creator Pro Theme) */
+:root {
+  /* =================================================================
+     Dynamic Theme Variables (Managed by themeStore.ts)
+     ================================================================= */
+  /* Default Theme: Eagle Dark */
+  --color-primary: #007acc;
+  --color-secondary: #4d4d4d;
+  --color-accent: #007acc;
+  --color-purple: #007acc;
+  --grad-primary: linear-gradient(180deg, #007acc 0%, #0063a5 100%);
+  --color-bg-base: #1e1e1e;
+  --color-bg-sidebar: #252526;
+  --color-bg-header: #2d2d2d;
+  --color-bg-surface: #2d2d2d;
+  --color-bg-input: #3c3c3c;
+  --glass-border-bright: rgba(255, 255, 255, 0.05);
+  --glow-1: rgba(0, 122, 204, 0.1);
+  --glow-2: rgba(0, 0, 0, 0);
+  --glow-3: rgba(0, 0, 0, 0);
+  --glow-4: rgba(0, 0, 0, 0);
+
+  /* Fixed Style Constants */
+  --color-primary-light: #3395d6;
+  --color-primary-dark: #005a9e;
+  --color-primary-bg: rgba(0, 122, 204, 0.2);
+  --grad-primary-hover: linear-gradient(180deg, #1f8ad2 0%, #006eb3 100%);
+  --color-bg-surface-hover: rgba(255, 255, 255, 0.08);
+  --color-text-primary: #cccccc;
+  --color-text-secondary: #858585;
+  --color-text-tertiary: #666666;
+  --glass-blur: 0px;
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --grad-surface: none;
+  --color-text-disabled: #525252;
+  --color-text-inverse: #ffffff;
+
+  /* Borders */
+  --color-border: #3e3e42;
+  --color-border-hover: #505055;
+  --color-border-active: var(--color-primary);
+  --color-divider: rgba(255, 255, 255, 0.08);
+  --color-focus-ring: #0052d9;
+  --color-skeleton: #f2f3f5;
+
+  /* Status Colors */
+  --color-success: #10b981;          /* Emerald 500 */
+  --color-warning: #f59e0b;          /* Amber 500 */
+  --color-error: #ef4444;            /* Red 500 */
+  --color-info: #06b6d4;             /* Cyan 500 */
+
+  /* Legacy Variable Mappings (For compatibility) */
+  --color-bg-primary: var(--color-bg-base);
+  --color-bg-secondary: var(--color-bg-surface);
+  --color-bg-tertiary: var(--color-bg-sidebar);
+  --color-bg-hover: var(--color-bg-surface-hover);
+  --color-online: var(--color-primary);
+  --color-online-hover: var(--color-primary-hover);
+  --color-surface: var(--color-bg-surface);
+  --color-hover: var(--color-bg-surface-hover);
+  --color-active-bg: rgba(0, 122, 204, 0.15);
+  --color-selected: var(--color-active-bg);
+
+  /* =================================================================
+     Layout & Spacing
+     ================================================================= */
+  --sidebar-width: 260px;
+  --header-height: 56px;
+  --tab-height: 48px;
+  --statusbar-height: 32px;
+  --toolbar-height: 48px;
+  
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+
+  --grid-columns: 12;
+  --grid-gutter: 24px;
+  --page-margin: 64px;
+  --page-max-width: 1600px;
+
+  /* =================================================================
+     UI Elements
+     ================================================================= */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
+
+  --btn-height-primary: 40px;
+  --btn-height-secondary: 36px;
+  --btn-height-ghost: 32px;
+  --btn-min-hit: 24px;
+
+  /* Shadows - Subtle & Professional */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
+  --shadow-focus-ring: 0 0 0 2px color-mix(in srgb, var(--color-focus-ring) 100%, transparent 0%);
+  --shadow-eagle-card: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 rgba(0, 0, 0, 0.12);
+  --shadow-eagle-card-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  --shadow-eagle-card-selected: 0 0 0 2px var(--color-primary), 0 0 0 4px rgba(59, 130, 246, 0.3);
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  --font-size-xs: 12px;
+  --font-size-sm: 13px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+
+  --icon-size-16: 16px;
+  --icon-size-20: 20px;
+  --icon-size-24: 24px;
+  --icon-size-32: 32px;
+
+  --motion-duration: 200ms;
+  --motion-easing: cubic-bezier(0.2, 0, 0, 1); /* Eagle-like easing */
+  --motion-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+
+  --bp-375: 375px;
+  --bp-768: 768px;
+  --bp-1024: 1024px;
+  --bp-1440: 1440px;
+  --bp-1920: 1920px;
+}
+
+@media (max-width: 1439px) {
+  :root {
+    --page-margin: 48px;
+    --page-max-width: 1280px;
+  }
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --sidebar-width: 240px;
+    --page-margin: 24px;
+    --page-max-width: 960px;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --sidebar-width: 0px;
+    --page-margin: 16px;
+    --page-max-width: 100%;
+  }
+}

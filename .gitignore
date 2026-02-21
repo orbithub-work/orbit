@@ -1,0 +1,60 @@
+# AI Configuration Files
+.claude/
+.kilocodemodes
+CLAUDE.md
+docs/claude-auto-config.md
+.iflowignore
+
+# Go build artifacts
+*.exe
+*.dll
+*.so
+*.dylib
+.gocache/
+mock_gen
+
+# Data (Application State)
+data/
+!data/.gitkeep
+
+# User Data (Electron/Webview)
+.user-data-dev/
+
+# Test Data (Generated Content)
+test_assets*/
+mock_data/
+test_data/
+
+# Node modules
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+AGENTS.md
+
+# Build outputs
+build/
+frontend/dist/
+nul
+
+# OrbitHub specific
+/data/
+/bin/
+*.db
+*.db-shm
+*.db-wal
+server.port
+
+# Pro features (should not exist in open source)
+/pro/

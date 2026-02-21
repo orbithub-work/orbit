@@ -1,0 +1,25 @@
+{
+  "id": "com.orbithub.quick-tools",
+  "name": "快捷工具",
+  "version": "1.0.0",
+  "type": "frontend",
+  "description": "常用的快捷操作工具",
+  "author": "OrbitHub Team",
+  "license": "MIT",
+  "tier": "free",
+  "entry": "./dist/index.js",
+  "mounts": [
+    {
+      "slot": "Pool.Sidebar.Section",
+      "component": "QuickTools",
+      "title": "快捷工具",
+      "icon": "⚡",
+      "order": 100
+    }
+  ],
+  "permissions": [
+    "assets:read",
+    "tags:write",
+    "ui:notification"
+  ]
+}
